@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block main %}
+{% if files!=[] %}     
+    <ul class="pics">
+      {% for file in files %}
+      <li class="imggg"> 
+        <img src="{{file}}" />
+      </li>
+      {% endfor %}
+    </ul>
+
+{% endif %} 
+
+{% endblock %}

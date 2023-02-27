@@ -2,6 +2,7 @@
 
 {% block main %}
 <h1 class="page-header">File Upload</h1>
+<p>Please upload your images here.</p>
 
 {% include 'flash_messages.html' %}
 
@@ -13,6 +14,7 @@
   {{form.csrf_token}}
   <div class="files">
       {{form.image.label(class="filelabel")}}
+      <br>
       {{form.image(class="fileupload")}}
   </div>
 

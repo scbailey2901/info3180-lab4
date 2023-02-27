@@ -1,6 +1,6 @@
 import os
 from app import app, db, login_manager
-from flask import render_template, request, redirect, url_for, flash, session, abort
+from flask import render_template, request, redirect, send_from_directory, url_for, flash, session, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
 from app.models import UserProfile
@@ -41,10 +41,21 @@ def upload():
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         flash('File Saved', 'success')
-        return redirect(url_for('home')) # Update this to redirect the user to a route that displays all uploaded image files
+        return redirect(url_for('files')) # Update this to redirect the user to a route that displays all uploaded image files
 
     return render_template('upload.html', form=imgform)
 
+
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    root_dir = os.getcwd()
+    return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
+
+
+@app.route('/files')
+@login_required
+def files():
+    return render_template('files.html', files=get_uploaded_images())
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -69,8 +80,8 @@ def login():
             login_user(user)
             flash('Logged in successfully.', "success")
             # Remember to flash a message to the user
-            next_page = request.args.get('home')
-            return redirect(next_page or url_for('home'))
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('upload'))
                 #return redirect(url_for("home"))# The user should be redirected to the upload form instead
     else:
         flash_errors(form)
@@ -95,6 +106,16 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
 ), 'danger')
+            
+def get_uploaded_images():
+    filelist=[]
+    for subdir, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+        for file in files:
+            f=(os.path.join(subdir, file))
+            print(f)
+            if f.endswith(".jpg") or f.endswith(".png") or f.endswith(".jpg"):
+                filelist.append(f)
+        return filelist
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

@@ -18,3 +18,21 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+.files{
+    padding-bottom:5px ;
+    padding-top: 2px;
+
+}
+.filelabel{
+    display: inline-block;
+    font-weight: 600;
+    padding-bottom:10px ;
+    padding-top: 15px;
+}
+.fileupload{
+    width: 450px;
+    height:50px;
+    border-radius: 5px;
+    border-color: #ddddde;
+    border-width: 2px;
+}
