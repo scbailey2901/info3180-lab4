@@ -60,10 +60,9 @@ def files():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm()
-
-    # change this to actually validate the entire form submission
-    # and not just one field
-    if form.validate_on_submit:
+    if current_user.is_authenticated:
+        return redirect(url_for("upload"))# change this to actually validate the entire form submission# and not just one field
+    elif form.validate_on_submit:
             # Get the username and password values from the form.
         username=form.username.data
         password=form.password.data
@@ -74,18 +73,19 @@ def login():
             # Then store the result of that query to a `user` variable so it can be
             # passed to the login_user() method below.
             #user = db.session.execute(db.select(UserProfile).filter_by(username=username)).scalar()
-        user = UserProfile.query.filter_by(username=username).first()
-            # Gets user id, load into session
-        if user is not None and check_password_hash(user.password, password):
-            login_user(user)
-            flash('Logged in successfully.', "success")
-            # Remember to flash a message to the user
-            next_page = request.args.get('next')
-            return redirect(next_page or url_for('upload'))
-                #return redirect(url_for("home"))# The user should be redirected to the upload form instead
-    else:
-        flash_errors(form)
-    
+        if username and password:
+            user = UserProfile.query.filter_by(username=username).first()
+                # Gets user id, load into session
+            if user is not None and check_password_hash(user.password, password):
+                login_user(user)
+                flash('Logged in successfully.', "success")
+                # Remember to flash a message to the user
+                next_page = request.args.get('next')
+                return redirect(next_page or url_for('upload'))
+                    #return redirect(url_for("home"))# The user should be redirected to the upload form instead
+            else:
+                flash("Invalid username or password. Try again.")
+    flash_errors(form)
     return render_template("login.html", form=form)
 
 # user_loader callback. This callback is used to reload the user object from
@@ -94,7 +94,14 @@ def login():
 def load_user(id):
     return db.session.execute(db.select(UserProfile).filter_by(id=id)).scalar()
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash('You have  been logged out.', 'success')
+    return redirect(url_for("home"))
 ###
+
 # The functions below should be applicable to all Flask apps.
 ###
 

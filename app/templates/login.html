@@ -2,6 +2,7 @@
 
 {% block main %}
 <form class="form-login m-auto" method="post">
+
   {{ form.csrf_token }}
   <h2>Please sign in</h2>
   {% include 'flash_messages.html' %}
