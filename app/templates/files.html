@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<div id="files">
+
 {% if files!=[] %}     
     <ul class="pics">
       {% for file in files %}
@@ -11,5 +13,6 @@
     </ul>
 
 {% endif %} 
+</div>
 
 {% endblock %}

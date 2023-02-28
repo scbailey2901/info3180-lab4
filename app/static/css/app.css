@@ -36,3 +36,26 @@ body {
     border-color: #ddddde;
     border-width: 2px;
 }
+
+.pics{
+    display: grid;
+    grid-template-columns:repeat(3, calc(33.33% - 10px));
+    grid-gap: 10px;
+    list-style-type: none;
+    row-gap: 5px;
+
+}
+
+.pics li{
+    display: block;
+}
+
+.pics img{
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    padding-top: 0;
+}
+#files{
+    max-height:fit-content ;
+}
